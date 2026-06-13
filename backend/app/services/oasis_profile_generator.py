@@ -16,12 +16,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from openai import OpenAI
-from zep_cloud.client import Zep
 
 from ..config import Config
 from ..utils.logger import get_logger
 from ..utils.locale import get_language_instruction, get_locale, set_locale, t
-from .zep_entity_reader import EntityNode, ZepEntityReader
+from .local_entity_reader import EntityNode, LocalEntityReader
 
 logger = get_logger('mirofish.oasis_profile')
 
@@ -473,7 +472,7 @@ class OasisProfileGenerator:
                 context_parts.append("### 关联实体信息\n" + "\n".join(related_info))
         
         # 4. 使用Zep混合检索获取更丰富的信息
-        zep_results = self._search_zep_for_entity(entity)
+        zep_results = self._search_local_for_entity(entity)
         
         if zep_results.get("facts"):
             # 去重：排除已存在的事实
