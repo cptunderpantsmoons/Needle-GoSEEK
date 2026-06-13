@@ -7,6 +7,7 @@ This module provides:
 2. Graph storage and retrieval
 3. Semantic search capabilities
 4. Entity filtering and relationship queries
+5. Text ingestion with LLM-based entity/relation extraction
 
 Usage:
     from .local_graph import get_graph_store, get_graph_search

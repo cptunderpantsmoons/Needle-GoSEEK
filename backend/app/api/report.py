@@ -957,7 +957,7 @@ def search_graph_tool():
                 "error": t('api.requireGraphIdAndQuery')
             }), 400
         
-        from ..services.zep_tools import ZepToolsService
+        from ..services.local_tools import LocalToolsService as ZepToolsService
         
         tools = ZepToolsService()
         result = tools.search_graph(
@@ -1001,7 +1001,7 @@ def get_graph_statistics_tool():
                 "error": t('api.requireGraphId')
             }), 400
         
-        from ..services.zep_tools import ZepToolsService
+        from ..services.local_tools import LocalToolsService as ZepToolsService
         
         tools = ZepToolsService()
         result = tools.get_graph_statistics(graph_id)

@@ -11,7 +11,7 @@ from flask import request, jsonify
 from . import graph_bp
 from ..config import Config
 from ..services.ontology_generator import OntologyGenerator
-from ..services.graph_builder import GraphBuilderService
+from ..services.local_graph_builder import LocalGraphBuilderService
 from ..services.text_processor import TextProcessor
 from ..utils.file_parser import FileParser
 from ..utils.logger import get_logger
@@ -283,16 +283,6 @@ def build_graph():
     try:
         logger.info("=== 开始构建图谱 ===")
         
-        # 检查配置
-        errors = []
-        if not Config.ZEP_API_KEY:
-            errors.append(t('api.zepApiKeyMissing'))
-        if errors:
-            logger.error(f"配置错误: {errors}")
-            return jsonify({
-                "success": False,
-                "error": t('api.configError', details="; ".join(errors))
-            }), 500
         
         # 解析请求
         data = request.get_json() or {}
@@ -387,7 +377,7 @@ def build_graph():
                 )
                 
                 # 创建图谱构建服务
-                builder = GraphBuilderService(api_key=Config.ZEP_API_KEY)
+                builder = LocalGraphBuilderService()
                 
                 # 分块
                 task_manager.update_task(
@@ -571,14 +561,7 @@ def get_graph_data(graph_id: str):
     """
     获取图谱数据（节点和边）
     """
-    try:
-        if not Config.ZEP_API_KEY:
-            return jsonify({
-                "success": False,
-                "error": t('api.zepApiKeyMissing')
-            }), 500
-        
-        builder = GraphBuilderService(api_key=Config.ZEP_API_KEY)
+        builder = LocalGraphBuilderService()
         graph_data = builder.get_graph_data(graph_id)
         
         return jsonify({
@@ -598,24 +581,6 @@ def get_graph_data(graph_id: str):
 def delete_graph(graph_id: str):
     """
     删除Zep图谱
-    """
-    try:
-        if not Config.ZEP_API_KEY:
-            return jsonify({
-                "success": False,
-                "error": t('api.zepApiKeyMissing')
-            }), 500
-        
-        builder = GraphBuilderService(api_key=Config.ZEP_API_KEY)
-        builder.delete_graph(graph_id)
-        
-        return jsonify({
-            "success": True,
-            "message": t('api.graphDeleted', id=graph_id)
-        })
-        
-    except Exception as e:
-        return jsonify({
             "success": False,
             "error": str(e),
             "traceback": traceback.format_exc()
