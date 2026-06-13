@@ -1,0 +1,6 @@
+interface:
+  display_name: "Needle GoSEEK"
+  short_description: "Repo-specific patterns and workflows for Needle-GoSEEK"
+  default_prompt: "Use the Needle-GoSEEK repo skill to follow existing architecture, testing, and workflow conventions."
+policy:
+  allow_implicit_invocation: true
